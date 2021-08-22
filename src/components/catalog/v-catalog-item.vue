@@ -21,14 +21,7 @@
       </div>
 
     </v-popup>
-<transition name="fade">
-    <v-up-mirror
 
-        v-if="isVisiableMirror"
-        @closeMirrorBtn="closeMirorBtn"
-
-    />
-</transition>
 
 
 
@@ -51,11 +44,12 @@
 import vPopup from '../popup/v-popup'
 import toFix from "../../filters/toFix";
 import formattedPrice from "../../filters/price-format";
-import vUpMirror from "../upmirror/v-up-mirror"
+
+import Swal from 'sweetalert2';
 export default {
   components:{
     vPopup,
-    vUpMirror
+
 
   },
 props: {
@@ -77,9 +71,7 @@ props: {
     formattedPrice
   },
 methods:{
-  closeMirorBtn(){
-    this.isVisiableMirror=false
-  },
+
 
 
   showPopupInfo(){
@@ -92,33 +84,27 @@ methods:{
 
 
   addToCart() {
-    this.$emit('addToCart' , this.product_data);
-    this.isVisiableMirror=true;
-    setTimeout(()=> {this.isVisiableMirror=false},2000);
+    this.$emit('addToCart' , this.product_data)
 
-
-
+      Swal.fire({
+        title: 'Поздравляем!',
+        text: 'Вы добавили товар в корзину',
+        icon: 'success',
+        timer: 1000,
+        showConfirmButton: false,
+      })
+  }
   },
-  mounted() {
+  mounted(){
 
   }
 
 
  }
-}
+
 </script>
 
 <style>
-.fade-leave-active
-{
-  transition: opacity .5s;
-
-}
-.fade-leave-to {
-  opacity: 0;
-}
-
-
 
 .v-catalog-item{
   background-color: coral;

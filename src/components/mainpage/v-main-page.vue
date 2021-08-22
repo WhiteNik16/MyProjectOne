@@ -1,6 +1,7 @@
 <template>
 <div class="v-main-page">
   <h1>Online shop</h1>
+
 <div>
   <v-login class="v-login"/>
 </div>
@@ -18,8 +19,11 @@
 
 <script>
 import vLogin from "../v-login/v-login";
+
 export default {
-  name: "v-main-page",
+ methods:{
+
+ },
   components: {
     vLogin
   }
