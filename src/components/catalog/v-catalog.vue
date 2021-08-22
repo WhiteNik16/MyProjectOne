@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <h1 class='v-title'>Catalog</h1>
     <div class="filters">
       <v-select
@@ -9,11 +9,13 @@
 
       />
 
+
+
     <div class="range-slider">
       <input
           type="range"
           min="0"
-          max="4000"
+          max="9000"
           step="10"
           v-model.number="minPrice"
           @change="setRangeSliders"
@@ -34,21 +36,21 @@
     </div>
 
 <div class='v-catalog'>
+
   <router-link :to="{name:'cart', params:{cart_data: CART}}">
     <div class="v-catalog__link_to_cart">Cart: {{CART.length}}</div>
   </router-link>
+
   <router-link :to="{name:'pagedev'}">
-    <div class="v-link_pagedev">PageDev</div>
+    <div class="v-link_pagedev">PageDev </div>
   </router-link>
-
-
 
   <v-catalog-item class="v-catalog-item" v-for="product in filterProducts"
                   :key="product.article"
                    v-bind:product_data="product"
                    @addToCart="addToCart"
   />
-</div>
+  </div>
 </div>
 </template>
 
@@ -56,10 +58,12 @@
 import vCatalogItem from './v-catalog-item'
 import{mapActions, mapGetters} from 'vuex'
 import vSelect from '../../components/select/v-select'
+
 export default {
   components: {
     vCatalogItem,
-    vSelect
+    vSelect,
+
   },
   props: {},
   data() {
@@ -81,7 +85,7 @@ export default {
   computed: {
     ...mapGetters([
       'PRODUCTS',
-      'CART',
+      'CART', 'SEARCH_VALUE',
 
     ]),
     filterProducts() {
@@ -98,6 +102,7 @@ export default {
       'GET_PRODUCTS_FROM_API',
       'ADD_TO_CART'
     ]),
+
     setRangeSliders(){
       if(this.minPrice>this.maxPrice){
         let tmp= this.maxPrice;
@@ -124,12 +129,28 @@ export default {
     },
     addToCart(data) {
       this.ADD_TO_CART(data)
-    }
-  },
+    },
+    sortedProductsBySearchValue(value){
+      this.sortedProducts=[...this.PRODUCTS]
+      if(value) {
+        this.sortedProducts = this.sortedProducts.filter(function (item) {
+          return item.name.toLowerCase().includes(value.toLowerCase())
+        })
+      } else {
+        this.sortedProducts = this.PRODUCTS;
+      }
+    },
 
+  },
+  watch:{
+    SEARCH_VALUE(){
+      this.sortedProductsBySearchValue(this.SEARCH_VALUE)
+    }
+},
   mounted() {
     this.GET_PRODUCTS_FROM_API()
     this.sortByCategories()
+    this.sortedProductsBySearchValue(this.SEARCH_VALUE)
   }
 }
 
@@ -140,12 +161,10 @@ export default {
 .v-catalog{
 
   display: flex;
+  /*column-gap: 3%;*/
   flex-wrap: wrap;
   justify-content: normal;
   align-items: center;
-
-
-
 
 }
 
@@ -156,7 +175,7 @@ export default {
 }
 .v-catalog__link_to_cart{
   position: absolute;
-  top: 10px;
+  top: 15%;
   right: 10px;
   padding: 14px;
   border: solid 1px #aeaeae;
@@ -165,7 +184,7 @@ export default {
 }
 .v-link_pagedev{
   position: absolute;
-  top: 10px;
+  top: 15%;
   right: 93px;
   padding: 14px;
   border: solid 1px #aeaeae;

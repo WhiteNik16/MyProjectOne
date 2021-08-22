@@ -5,7 +5,7 @@
       :src="require('../../assets/images/'+cart_item_data.image)" alt="">
   <div class="v-cart-item__info">
     <p>{{cart_item_data.name}}</p>
-    <p>{{cart_item_data.price}}</p>
+    <p>{{cart_item_data.price | toFix | formattedPrice }}</p>
     <p>{{cart_item_data.article}}</p>
 
   </div>
@@ -27,6 +27,8 @@
 <script>
 
 
+import toFix from "../../filters/toFix";
+import formattedPrice from "../../filters/price-format";
 export default {
   name: "v-cart-item",
   props:{
@@ -40,6 +42,10 @@ export default {
     data() {
       return{}
     },
+  filters:{
+    toFix,
+    formattedPrice
+  },
   methods:{
     deleteFromCart() {
       this.$emit('deleteFromCart')

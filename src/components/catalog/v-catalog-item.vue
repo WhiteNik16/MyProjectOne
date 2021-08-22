@@ -1,6 +1,9 @@
 <template>
   <div class="v-catalog-item">
 
+
+
+
     <v-popup
       v-if="isInfoPopupVisible"
       right-btn-title="Add to Cart"
@@ -12,19 +15,26 @@
       <div>
         <p class="v-catalog-item__pop">{{product_data.name}}</p>
 
-        <p class="v-catalog-item__pop">Price: {{ product_data.price}}Грн</p>
+        <p class="v-catalog-item__pop">Price: {{ product_data.price | toFix| formattedPrice  }}</p>
 
         <p class="v-catalog-item__pop">{{product_data.category}}</p>
       </div>
 
     </v-popup>
+<transition name="fade">
+    <v-up-mirror
 
+        v-if="isVisiableMirror"
+        @closeMirrorBtn="closeMirorBtn"
+
+    />
+</transition>
 
 
 
     <img class="v-catalog-item__img" :src=" require('../../assets/images/'+product_data.image)"  alt="img">
      <p class="v-catalog-item__name">{{product_data.name}}</p>
-    <p class="v-catalog-item__price">Price: {{ product_data.price}}Грн</p>
+    <p class="v-catalog-item__price">Price: {{ product_data.price| toFix | formattedPrice }}</p>
     <button
     class="v-catalog-item__show-info"
     @click="showPopupInfo"
@@ -39,9 +49,14 @@
 
 <script>
 import vPopup from '../popup/v-popup'
+import toFix from "../../filters/toFix";
+import formattedPrice from "../../filters/price-format";
+import vUpMirror from "../upmirror/v-up-mirror"
 export default {
   components:{
-    vPopup
+    vPopup,
+    vUpMirror
+
   },
 props: {
   product_data: {
@@ -53,10 +68,20 @@ props: {
 },
   data(){
     return{
+      isVisiableMirror: false,
       isInfoPopupVisible: false
     }
   },
+  filters:{
+    toFix,
+    formattedPrice
+  },
 methods:{
+  closeMirorBtn(){
+    this.isVisiableMirror=false
+  },
+
+
   showPopupInfo(){
     this.isInfoPopupVisible=true;
 
@@ -65,8 +90,14 @@ methods:{
     this.isInfoPopupVisible=false;
   },
 
+
   addToCart() {
     this.$emit('addToCart' , this.product_data);
+    this.isVisiableMirror=true;
+    setTimeout(()=> {this.isVisiableMirror=false},2000);
+
+
+
   },
   mounted() {
 
@@ -78,6 +109,17 @@ methods:{
 </script>
 
 <style>
+.fade-leave-active
+{
+  transition: opacity .5s;
+
+}
+.fade-leave-to {
+  opacity: 0;
+}
+
+
+
 .v-catalog-item{
   background-color: coral;
   flex-basis: 25%;
@@ -98,7 +140,6 @@ methods:{
 
 
   }
-
 
 
 </style>
